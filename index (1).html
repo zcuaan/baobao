@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#e3f3f0">
+  <meta name="description" content="Sprout Guidance helps early years staff find official guidance and build their knowledge.">
+  <title>Sprout Guidance — Early years guidance, made simple</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #203842;
+      --muted: #4f646d;
+      --mint: #d9efeb;
+      --mint-strong: #b8e2db;
+      --mint-dark: #186b70;
+      --coral: #d55a73;
+      --coral-soft: #fbe7e9;
+      --cream: #fff7e9;
+      --paper: #ffffff;
+      --background: #f8fbfa;
+      --line: #d9e5e4;
+      --shadow: 0 12px 28px rgba(34, 73, 74, .055);
+      --font-px: 18px;
+      --body-line: 1.6;
+      font-size: var(--font-px);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--background); color: var(--ink); font-family: Verdana, Arial, system-ui, sans-serif; font-size: 1rem; line-height: var(--body-line); }
+    body.easy-read { --body-line: 1.9; letter-spacing: .015em; }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    a { color: var(--mint-dark); text-underline-offset: 3px; }
+    a:hover { color: var(--ink); }
+    button, a, input, select, summary { -webkit-tap-highlight-color: transparent; }
+    :focus-visible { outline: 3px solid #145b83 !important; outline-offset: 4px; }
+    .skip { position: absolute; z-index: 100; left: 12px; top: -100px; padding: 12px 16px; background: white; border: 2px solid var(--ink); }
+    .skip:focus { top: 12px; }
+    [hidden] { display: none !important; }
+    .shell { display: grid; grid-template-columns: 258px minmax(0, 1fr); min-height: 100vh; }
+    .sidebar { position: sticky; top: 0; height: 100vh; background: #fff; border-right: 1px solid var(--line); padding: 35px 21px 23px; display: flex; flex-direction: column; gap: 26px; }
+    .brand { display: flex; align-items: center; gap: 11px; width: max-content; max-width: 100%; text-decoration: none; color: var(--ink); font-weight: 850; line-height: 1.1; font-size: 1.12rem; letter-spacing: -.045em; }
+    .brand-mark { width: 41px; height: 41px; border-radius: 14px; display: grid; place-items: center; background: var(--mint); flex: none; }
+    .brand-mark svg { color: var(--mint-dark); }
+    .brand b { display: block; }
+    .brand span span { display: block; font-weight: 600; font-size: .8rem; letter-spacing: .005em; color: var(--muted); margin-top: 3px; }
+    .main-nav { display: grid; gap: 6px; }
+    .nav-button { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 49px; padding: 10px 13px; border: 0; border-radius: 12px; background: transparent; text-align: left; color: var(--ink); font-size: .88rem; font-weight: 650; }
+    .nav-button:hover { background: #f0f8f6; }
+    .nav-button[aria-current="page"] { background: var(--mint); color: #123d42; }
+    .nav-button svg { flex: none; }
+    .side-spacer { flex: 1; }
+    .preferences { border-top: 1px solid var(--line); padding-top: 16px; }
+    .preferences summary { list-style: none; font-weight: 700; font-size: .85rem; padding: 10px 0; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+    .preferences summary::-webkit-details-marker { display: none; }
+    .preferences summary:after { content: '⌄'; margin-left: auto; font-size: 1.2rem; }
+    .preferences[open] summary:after { content: '⌃'; }
+    .preference-inner { padding: 7px 0 3px; }
+    .control-label { display: block; font-size: .83rem; color: var(--muted); margin-bottom: 8px; }
+    .size-row { display: flex; align-items: center; gap: 7px; }
+    .mini-btn { min-width: 47px; height: 47px; padding: 0 8px; border: 1px solid #9cb2b3; border-radius: 10px; background: white; font-weight: 750; color: var(--ink); }
+    .mini-btn:hover { background: var(--mint); }
+    .mini-btn:disabled { opacity: .45; cursor: not-allowed; }
+    #size-name { flex: 1; text-align: center; font-size: .8rem; }
+    .check-row { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: .82rem; margin-top: 14px; min-height: 44px; }
+    .check-row input { width: 23px; height: 23px; accent-color: var(--mint-dark); }
+    .sidebar-note { font-size: .76rem; color: var(--muted); margin: 0; }
+    .workspace { min-width: 0; padding: 40px clamp(22px, 5vw, 78px) 75px; }
+    .workspace-inner { max-width: 1150px; margin: 0 auto; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; color: #315f60; font-size: .76rem; font-weight: 800; letter-spacing: .065em; margin: 0; }
+    h1, h2, h3, h4, p { margin-top: 0; }
+    h1 { font-size: clamp(2rem, 3.5vw, 3.1rem); line-height: 1.16; letter-spacing: -.055em; margin-bottom: 14px; }
+    h2 { font-size: 1.35rem; line-height: 1.25; letter-spacing: -.03em; }
+    h3 { font-size: 1.05rem; line-height: 1.35; }
+    .hero { position: relative; display: flex; justify-content: space-between; gap: 24px; align-items: center; padding: clamp(28px, 4.2vw, 52px); border: 1px solid #cde5e1; border-radius: 26px; background: linear-gradient(120deg,#daf1ec 0%,#eef8f5 70%,#f8fbfa 100%); overflow: hidden; }
+    .hero-copy { position: relative; z-index: 1; max-width: 640px; }
+    .hero .eyebrow { margin-bottom: 21px; }
+    .hero p:last-child { color: #36535a; max-width: 54ch; font-size: 1.01rem; margin: 0; }
+    .hero-illustration { width: 175px; height: 175px; flex: none; }
+    .search-card { background: white; border: 1px solid var(--line); border-radius: 21px; padding: clamp(20px, 3vw, 31px); margin-top: 20px; box-shadow: var(--shadow); }
+    .field-label { display: block; margin-bottom: 12px; font-size: 1rem; font-weight: 750; }
+    .search-row { display: flex; gap: 10px; align-items: stretch; }
+    input[type="search"], select { width: 100%; border: 2px solid #b8ceca; border-radius: 13px; background: #fff; color: var(--ink); min-height: 55px; padding: 12px 15px; min-width: 0; }
+    input[type="search"]::placeholder { color: #61767c; opacity: 1; }
+    input[type="search"]:focus, select:focus { border-color: var(--mint-dark); }
+    .primary, .secondary { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 51px; border-radius: 12px; border: 2px solid transparent; padding: 10px 19px; font-weight: 750; font-size: .9rem; text-decoration: none; }
+    .primary { background: var(--ink); color: white; }
+    .primary:hover { background: #31535b; color: white; }
+    .secondary { border-color: #a7c2c0; background: white; color: var(--ink); }
+    .secondary:hover { background: var(--mint); }
+    .help-text { color: var(--muted); font-size: .8rem; margin: 12px 0 0; }
+    .section { margin-top: 40px; }
+    .section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; margin-bottom: 17px; }
+    .section-head h2 { margin: 0; }
+    .link-button { border: 0; background: transparent; color: var(--mint-dark); font-weight: 700; text-decoration: underline; padding: 10px 0; font-size: .85rem; min-height: 44px; }
+    .topic-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 13px; }
+    .topic-card { display: flex; flex-direction: column; align-items: flex-start; gap: 11px; min-height: 166px; padding: 20px 16px; background: white; border: 1px solid var(--line); border-radius: 17px; color: var(--ink); text-align: left; transition: transform .12s ease, background-color .12s ease; }
+    .topic-card:hover { transform: translateY(-2px); background: #fcfefd; border-color: #96c1bb; }
+    .topic-icon { width: 44px; height: 44px; border-radius: 13px; display: grid; place-items: center; background: var(--mint); color: #17686e; }
+    .topic-card:nth-child(3n + 2) .topic-icon { background: var(--coral-soft); color: #a83f58; }
+    .topic-card:nth-child(3n) .topic-icon { background: var(--cream); color: #855a1f; }
+    .topic-title { display: block; font-weight: 750; font-size: .88rem; line-height: 1.3; }
+    .topic-desc { display: block; margin-top: -6px; font-size: .76rem; color: var(--muted); line-height: 1.45; }
+    .two-col { display: grid; grid-template-columns: 1.15fr .85fr; gap: 17px; }
+    .surface { border-radius: 21px; background: white; border: 1px solid var(--line); padding: 25px; }
+    .surface h2 { font-size: 1.18rem; margin-bottom: 8px; }
+    .surface p { color: var(--muted); font-size: .87rem; margin-bottom: 17px; }
+    .question-list { display: grid; gap: 9px; }
+    .question-link { display: flex; align-items: center; justify-content: space-between; gap: 13px; min-height: 51px; width: 100%; padding: 11px 13px; border: 1px solid var(--line); border-radius: 11px; background: #fff; color: var(--ink); text-align: left; font-size: .82rem; font-weight: 600; }
+    .question-link:hover { background: #f2faf7; border-color: #94c3bb; }
+    .learning-card { background: #fdefed; border-color: #f2d2d4; position: relative; }
+    .learning-card .badge { display: inline-flex; border-radius: 999px; padding: 7px 11px; background: #fff; color: #963c53; font-weight: 750; font-size: .75rem; margin-bottom: 17px; }
+    .learning-card h2 { font-size: 1.5rem; max-width: 18ch; }
+    .learning-card p { color: #5c444b; font-size: .9rem; }
+    .learning-card .secondary { border-color: #cc8d99; }
+    .status-card { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 27px; margin-top: 22px; box-shadow: var(--shadow); }
+    .status-card h2 { margin-bottom: 10px; }
+    .status-card p { color: var(--muted); }
+    .status-card .notice { border-left: 4px solid #207477; padding-left: 17px; max-width: 75ch; }
+    .source-grid { display: grid; gap: 12px; margin-top: 17px; }
+    .source-card { background: #f9fcfb; border: 1px solid var(--line); padding: 18px; border-radius: 14px; }
+    .source-card h3 { margin: 0 0 4px; }
+    .source-card .meta { font-size: .8rem; color: var(--muted); margin-bottom: 9px; }
+    .source-card blockquote { border-left: 4px solid var(--mint-dark); margin: 15px 0; padding-left: 17px; color: var(--ink); }
+    .source-card a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; font-size: .86rem; }
+    .claim-list { padding-left: 24px; }
+    .claim-list li { margin-bottom: 20px; }
+    .claim-list li p { color: var(--ink); font-weight: 550; margin-bottom: 8px; }
+    .source-chip { display: inline-block; background: var(--mint); border-radius: 7px; padding: 7px 10px; margin: 3px 5px 3px 0; font-size: .8rem; font-weight: 650; }
+    .intro { max-width: 68ch; color: var(--muted); }
+    .library-header { margin-bottom: 26px; }
+    .library-header h1 { margin: 0 0 10px; }
+    .info-banner { background: #eaf6f3; border: 1px solid #b7d9d3; border-radius: 13px; padding: 16px 18px; margin: 0 0 22px; font-size: .85rem; }
+    .filters { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0 26px; }
+    .filter label { display: block; font-weight: 700; font-size: .85rem; margin-bottom: 7px; }
+    .count { color: var(--muted); font-size: .89rem; margin-bottom: 15px; }
+    .library-list { display: grid; gap: 12px; }
+    .library-item { background: white; border: 1px solid var(--line); border-radius: 16px; padding: 20px 22px; }
+    .library-item h2 { font-size: 1.1rem; margin: 7px 0 8px; }
+    .library-item .meta { font-size: .79rem; color: var(--muted); margin: 0; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 6px; margin: 11px 0 10px; }
+    .tag { border: 0; border-radius: 8px; background: #ecf6f3; padding: 7px 10px; font-size: .72rem; font-weight: 650; min-height: 36px; color: #1b5c61; }
+    .tag:hover { background: #ccebe4; }
+    .external { display: inline-flex; gap: 7px; align-items: center; min-height: 44px; font-weight: 750; font-size: .86rem; }
+    .empty-state { padding: 22px; background: white; border: 1px solid var(--line); border-radius: 14px; }
+    .about-content { max-width: 760px; }
+    .about-content .surface { margin-top: 18px; }
+    .about-content li { margin-bottom: 9px; }
+    .footer { margin-top: 50px; padding-top: 17px; border-top: 1px solid var(--line); font-size: .75rem; color: var(--muted); }
+    @media (max-width: 1220px) { .topic-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .topic-card { min-height: 145px; } .hero-illustration { width: 128px; height: 128px; } }
+    @media (max-width: 860px) { .shell { display: block; } .sidebar { position: static; height: auto; padding: 15px 20px; border-right: 0; border-bottom: 1px solid var(--line); gap: 14px; } .main-nav { display: flex; flex-wrap: wrap; gap: 6px; } .nav-button { width: auto; } .side-spacer { display: none; } .preferences { padding-top: 0; border: 0; } .preferences:not([open]) { margin: 0; } .sidebar-note { display: none; } .workspace { padding: 26px 20px 55px; } }
+    @media (max-width: 620px) { .hero { padding: 28px 22px; } .hero-illustration { display: none; } .search-row { flex-direction: column; } .search-row .primary { width: 100%; } .topic-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; } .topic-card { min-height: 142px; padding: 14px 12px; } .topic-icon { width: 39px; height: 39px; } .two-col, .filters { grid-template-columns: 1fr; } .section-head { align-items: flex-start; flex-direction: column; gap: 5px; } .section { margin-top: 31px; } .status-card { padding: 21px; } }
+    @media (max-width: 355px) { .topic-grid { grid-template-columns: 1fr; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; } }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main-content">Skip to main content</a>
+  <div class="shell">
+    <aside class="sidebar" aria-label="Site navigation and reading settings">
+      <a class="brand" href="#home" aria-label="Sprout Guidance home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg width="27" height="27" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M14 24V12"/><path d="M14 15C8 15 5 11 5 6c6 0 9 3 9 9Z"/><path d="M14 12c0-6 4-9 10-9 0 6-4 9-10 9Z"/></svg>
+        </span>
+        <span><b>Sprout</b><span>Guidance</span></span>
+      </a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <button class="nav-button" type="button" data-nav="home" aria-current="page"><span data-icon="search"></span> Ask a question</button>
+        <button class="nav-button" type="button" data-nav="library"><span data-icon="book"></span> Document library</button>
+        <button class="nav-button" type="button" data-nav="about"><span data-icon="info"></span> How Sprout works</button>
+      </nav>
+      <div class="side-spacer"></div>
+      <details class="preferences" id="reading-preferences">
+        <summary><span data-icon="settings"></span> Make reading easier</summary>
+        <div class="preference-inner">
+          <span class="control-label">Text size</span>
+          <div class="size-row">
+            <button class="mini-btn" type="button" id="font-smaller" aria-label="Make text smaller">A−</button>
+            <span id="size-name" aria-live="polite">Normal</span>
+            <button class="mini-btn" type="button" id="font-bigger" aria-label="Make text larger">A+</button>
+          </div>
+          <label class="check-row"><input type="checkbox" id="line-spacing"> More space between lines</label>
+        </div>
+      </details>
+      <p class="sidebar-note">Guidance for early years staff in England.<br>This is a prototype.</p>
+    </aside>
+    <main class="workspace" id="main-content" tabindex="-1">
+      <div class="workspace-inner">
+        <div id="page-home">
+          <header class="hero">
+            <div class="hero-copy">
+              <p class="eyebrow"><span data-icon="sparkle"></span> EARLY YEARS GUIDANCE</p>
+              <h1>What do you need to know?</h1>
+              <p>Clear guidance for everyday nursery questions — and a place to keep learning.</p>
+            </div>
+            <svg class="hero-illustration" viewBox="0 0 190 190" aria-hidden="true" fill="none">
+              <circle cx="98" cy="95" r="78" fill="#b9e4dc"/>
+              <circle cx="150" cy="46" r="13" fill="#ed98a8"/>
+              <path d="M94 144V73" stroke="#226e6c" stroke-width="7" stroke-linecap="round"/>
+              <path d="M94 104C55 103 38 82 37 53c37-2 58 17 57 51Z" fill="#fcfefb" stroke="#226e6c" stroke-width="4"/>
+              <path d="M94 83c0-34 19-52 52-52 0 31-17 52-52 52Z" fill="#e3f5ec" stroke="#226e6c" stroke-width="4"/>
+              <path d="M59 151h73" stroke="#226e6c" stroke-width="7" stroke-linecap="round"/>
+              <path d="M43 148h102l-8 13H52l-9-13Z" fill="#fff" stroke="#226e6c" stroke-width="4" stroke-linejoin="round"/>
+              <circle cx="43" cy="111" r="5" fill="#e9986b"/>
+              <circle cx="155" cy="118" r="7" fill="#f3c36b"/>
+            </svg>
+          </header>
+          <section class="search-card" aria-labelledby="ask-heading">
+            <h2 class="field-label" id="ask-heading">Ask a question</h2>
+            <form id="question-form" role="search">
+              <div class="search-row">
+                <input id="question-input" type="search" autocomplete="off" aria-label="Ask an early years guidance question" placeholder="e.g. What should I do about food allergies?" required>
+                <button class="primary" type="submit"><span data-icon="search"></span> Search</button>
+              </div>
+            </form>
+            <p class="help-text">Use your own words. Please don't include children's names or private information.</p>
+          </section>
+          <section id="answer-section" class="status-card" aria-label="Search result" aria-live="polite" hidden></section>
+          <section class="section" aria-labelledby="topics-heading">
+            <div class="section-head"><h2 id="topics-heading">Browse guidance by topic</h2><button class="link-button" type="button" id="all-documents">View all documents</button></div>
+            <div class="topic-grid" id="topic-grid"></div>
+          </section>
+          <section class="section two-col" aria-label="Questions and staff learning">
+            <div class="surface">
+              <h2>Not sure what to ask?</h2>
+              <p>Try one of these everyday questions.</p>
+              <div class="question-list" id="example-questions"></div>
+            </div>
+            <div class="surface learning-card">
+              <span class="badge">For your professional development</span>
+              <h2>Little steps. Growing confidence.</h2>
+              <p>New to early years, returning to work or building your knowledge? Explore a topic at your own pace, with official sources you can check.</p>
+              <button class="secondary" type="button" id="explore-learning">Explore a topic <span data-icon="arrow"></span></button>
+            </div>
+          </section>
+        </div>
+        <div id="page-library" hidden>
+          <header class="library-header"><p class="eyebrow">OFFICIAL SOURCE DIRECTORY</p><h1>Document library</h1><p class="intro">Find official early years publications by topic. Open the original source to read it.</p></header>
+          <div class="info-banner"><strong>Important:</strong> These are links to official publication pages, not an approved AI database. Check each page for the current version. Full-text search and referenced AI answers are not yet connected.</div>
+          <div class="filters">
+            <div class="filter"><label for="topic-filter">Choose a topic</label><select id="topic-filter"></select></div>
+            <div class="filter"><label for="library-search">Find a document</label><input type="search" id="library-search" placeholder="Search titles or organisations"></div>
+          </div>
+          <p id="library-count" class="count" aria-live="polite"></p>
+          <div id="library-list" class="library-list"></div>
+        </div>
+        <div id="page-about" hidden>
+          <div class="about-content">
+            <p class="eyebrow">ABOUT SPROUT GUIDANCE</p>
+            <h1>Support for every member of the team.</h1>
+            <p class="intro">Sprout is being designed for nursery practitioners, SENCOs, room leaders and managers. The aim is to make official guidance easier to find and understand without replacing the original documents.</p>
+            <section class="surface"><h2>What works today</h2><ul><li>Browse eight clear topics.</li><li>Find and open official government publication links.</li><li>Search the source directory by title and related keywords.</li><li>Adjust text size and line spacing.</li></ul></section>
+            <section class="surface"><h2>What still needs connecting</h2><p>AI answers, document importing and approval, citation checks, and user accounts all need a secure backend.</p><p>When enabled, AI should only answer from administrator-approved, indexed documents. Each substantive statement must cite the exact supporting passage. If evidence is missing, it should say so rather than guess.</p><p><strong>Supabase plan:</strong> store approved documents and passages in your database, retrieve them in an Edge Function, verify citations server-side, then send verified results to this page. Never add service-role keys or private AI keys to this HTML file.</p></section>
+            <button class="secondary" type="button" id="about-back">Back to search <span data-icon="arrow"></span></button>
+          </div>
+        </div>
+        <footer class="footer">Sprout Guidance · Prototype for early years settings in England · Always check the original official source for current requirements.</footer>
+      </div>
+    </main>
+  </div>
+  <script>
+    'use strict';
+
+    // SINGLE-FILE PROTOTYPE. No API keys or private data belong in this file.
+    // Add the PUBLIC URL of a secured Supabase Edge Function when the backend is ready.
+    // That function must search ONLY admin-approved material and verify citations server-side.
+    const SEARCH_ENDPOINT = '';
+    const PUBLIC_SUPABASE_ANON_KEY = ''; // optional publishable/anon key, NEVER service_role
+
+    const ICONS = {
+      search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-4.2-4.2"/>',
+      book: '<path d="M12 6C9 4 6 4 3 4v15c3 0 6 0 9 2 3-2 6-2 9-2V4c-3 0-6 0-9 2Z"/><path d="M12 6v15"/>',
+      shield: '<path d="m12 2 8 4v6c0 5-3.5 8.4-8 10-4.5-1.6-8-5-8-10V6l8-4Z"/><path d="m9 12 2 2 4-4"/>',
+      brain: '<path d="M11 6a4 4 0 0 0-7 2 4 4 0 0 0-1 6 4 4 0 0 0 8 3V6Zm2 0a4 4 0 0 1 7 2 4 4 0 0 1 1 6 4 4 0 0 1-8 3V6Z"/><path d="M7 10h4m2 0h4M7 15h4m2 0h4"/>',
+      heart: '<path d="M20.8 8c0-3-2.5-5-5-5-1.7 0-3 1-3.8 2-1-1-2.2-2-4-2A5 5 0 0 0 3 8c0 4 4 8 9 12 5-4 8.8-8 8.8-12Z"/>',
+      health: '<path d="M20 8c0-3-2.4-5-5-5-1.5 0-2.4.7-3 1.6C11.3 3.7 10.5 3 9 3 6.3 3 4 5 4 8c0 4 4 8 8 12 4-4 8-8 8-12Z"/><path d="M12 7v7m-3.5-3.5h7"/>',
+      people: '<circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M17 5a3 3 0 0 1 0 6m1 4a5 5 0 0 1 3 5"/>',
+      clipboard: '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M8 10l2 2 4-4M8 16h8"/>',
+      building: '<path d="M3 21V5l9-3v19M12 8h9v13M7 8h1m-1 4h1m-1 4h1m8-4h1m-1 4h1M2 21h20"/>',
+      info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
+      settings: '<path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2" fill="white"/><circle cx="16" cy="17" r="2" fill="white"/>',
+      sparkle: '<path d="m12 3 2.2 6.8L21 12l-6.8 2.2L12 21l-2.2-6.8L3 12l6.8-2.2L12 3Z"/>',
+      arrow: '<path d="M4 12h16m-6-6 6 6-6 6"/>',
+      speaker: '<path d="M4 9v6h4l5 4V5L8 9H4Zm13 0a5 5 0 0 1 0 6"/>',
+      stop: '<rect x="6" y="6" width="12" height="12" rx="2"/>',
+      external: '<path d="M13 4h7v7m0-7-10 10M20 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h5"/>'
+    };
+    function icon(name, size = 21) {
+      const span = document.createElement('span');
+      span.setAttribute('aria-hidden','true');
+      span.style.display = 'inline-flex';
+      span.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round">'+(ICONS[name] || ICONS.info)+'</svg>';
+      return span;
+    }
+    const TOPICS = [
+      { id:'frameworks', title:'Frameworks & legislation', desc:'Core requirements', icon:'book' },
+      { id:'safeguarding', title:'Safeguarding', desc:'Keeping children safe', icon:'shield' },
+      { id:'learning', title:'Learning & development', desc:'Play, teaching & assessment', icon:'brain' },
+      { id:'send', title:'SEND & inclusion', desc:'Supporting every child', icon:'heart' },
+      { id:'health', title:'Health & nutrition', desc:'Food, allergies & wellbeing', icon:'health' },
+      { id:'staffing', title:'Staffing & leadership', desc:'People, ratios & qualifications', icon:'people' },
+      { id:'inspection', title:'Ofsted & inspections', desc:'Understanding inspection', icon:'clipboard' },
+      { id:'operations', title:'Operations & funding', desc:'Running a setting', icon:'building' }
+    ];
+    // These are links to official publication pages, NOT ingested or approved documents.
+    const SOURCES = [
+      { id:'eyfs', title:'Early years foundation stage statutory framework', publisher:'Department for Education', kind:'Statutory framework', url:'https://www.gov.uk/government/publications/early-years-foundation-stage-framework--2', topics:['frameworks','safeguarding','learning','health','staffing','operations'], keywords:'eyfs welfare childcare requirements mandatory ratios staff children child protection safeguarding curriculum allergies dietary meals' },
+      { id:'nutrition', title:'Early years foundation stage nutrition guidance', publisher:'Department for Education', kind:'Government guidance', url:'https://www.gov.uk/government/publications/early-years-foundation-stage-nutrition', topics:['health'], keywords:'food allergies allergy eating meals diet milk healthy lunch snack refusal nutrition feeding dietary' },
+      { id:'inspection', title:'Early years inspection toolkit and operating guide', publisher:'Ofsted', kind:'Inspection guidance', url:'https://www.gov.uk/government/publications/early-years-inspection-toolkit-operating-guide-and-information', topics:['inspection','operations'], keywords:'ofsted quality judgement evaluation criteria visit reporting supervision inspection' },
+      { id:'send-code', title:'SEND code of practice: 0 to 25 years', publisher:'Department for Education and Department of Health and Social Care', kind:'Statutory guidance', url:'https://www.gov.uk/government/publications/send-code-of-practice-0-to-25', topics:['send','frameworks'], keywords:'special educational needs disability senco inclusion provision support plan' },
+      { id:'development', title:'Development Matters', publisher:'Department for Education', kind:'Non-statutory guidance', url:'https://www.gov.uk/government/publications/development-matters--2', topics:['learning'], keywords:'learning child development curriculum play language observations assessment milestones' },
+      { id:'working-together', title:'Working together to safeguard children', publisher:'HM Government', kind:'Safeguarding guidance', url:'https://www.gov.uk/government/publications/working-together-to-safeguard-children--2', topics:['safeguarding'], keywords:'child protection abuse neglect reporting safeguarding concerns referrals' },
+      { id:'send-guide', title:'SEND: guide for early years settings', publisher:'Department for Education', kind:'Government guidance', url:'https://www.gov.uk/government/publications/send-guide-for-early-years-settings', topics:['send'], keywords:'sen special educational needs disability support senco practitioners inclusion' },
+      { id:'progress-check', title:'Progress check at age two', publisher:'Department for Education', kind:'Government guidance', url:'https://www.gov.uk/government/publications/progress-check-at-age-2', topics:['learning'], keywords:'toddler two year old assessment development progress review' },
+      { id:'qualifications', title:'Early years qualification requirements and standards', publisher:'Department for Education', kind:'Government guidance', url:'https://www.gov.uk/government/publications/early-years-qualification-requirements-and-standards', topics:['staffing','frameworks'], keywords:'training staff nursery manager qualifications ratios recruitment professional development' },
+      { id:'sharing', title:'Information sharing advice for safeguarding practitioners', publisher:'HM Government', kind:'Government guidance', url:'https://www.gov.uk/government/publications/information-sharing-to-safeguard-children-and-young-people', topics:['safeguarding','operations'], keywords:'confidentiality privacy data sharing safeguarding parents records' },
+      { id:'health-protection', title:'Health protection in schools and childcare settings', publisher:'UK Health Security Agency', kind:'Public health guidance', url:'https://www.gov.uk/government/publications/health-protection-in-schools-and-other-childcare-facilities', topics:['health'], keywords:'infection exclusion illness sickness disease hygiene outbreak health safety' }
+    ];
+    const EXAMPLES = [
+      'What should I do if a child has a food allergy?',
+      'How can I support a child with SEND?',
+      'What is the progress check at age two?',
+      'What qualifications do nursery staff need?'
+    ];
+    const $ = (sel) => document.querySelector(sel);
+    function elt(tag, className, content) {
+      const n = document.createElement(tag);
+      if (className) n.className = className;
+      if (content !== undefined && content !== null) n.textContent = content;
+      return n;
+    }
+    const topicName = id => TOPICS.find(t => t.id === id)?.title || 'All topics';
+    let selectedTopic = 'all';
+    let currentQuestion = '';
+    let activeRequest = 0;
+    let speaking = false;
+    let fontSize = 18;
+    let extraSpacing = false;
+
+    function renderIcons() {
+      document.querySelectorAll('[data-icon]').forEach(node => {
+        node.replaceWith(icon(node.dataset.icon, 21));
+      });
+    }
+    function renderTopics() {
+      const grid = $('#topic-grid');
+      TOPICS.forEach(t => {
+        const b = elt('button','topic-card'); b.type='button';
+        const badge = elt('span','topic-icon'); badge.appendChild(icon(t.icon,24));
+        b.append(badge,elt('span','topic-title',t.title),elt('span','topic-desc',t.desc));
+        b.addEventListener('click',()=>go('library',t.id)); grid.appendChild(b);
+      });
+    }
+    function renderExamples() {
+      EXAMPLES.forEach(q => {
+        const b = elt('button','question-link'); b.type='button';
+        b.append(elt('span','',q),icon('arrow',18));
+        b.addEventListener('click',()=>{ $('#question-input').value=q; go('home'); runSearch(q); });
+        $('#example-questions').appendChild(b);
+      });
+    }
+    function makeSourceLink(src, text='Open official publication') {
+      const a=elt('a','external',text+' ');
+      a.href=src.url; a.target='_blank'; a.rel='noopener noreferrer';
+      a.appendChild(icon('external',17)); return a;
+    }
+    function renderLibrary() {
+      const term=$('#library-search').value.trim().toLowerCase();
+      const filtered=SOURCES.filter(d =>
+        (selectedTopic==='all'||d.topics.includes(selectedTopic)) &&
+        (!term || [d.title,d.publisher,d.kind,d.keywords].join(' ').toLowerCase().includes(term))
+      );
+      $('#library-count').textContent=filtered.length+' official publication'+(filtered.length===1?'':'s')+' found';
+      const list=$('#library-list'); list.replaceChildren();
+      if(!filtered.length){ list.appendChild(elt('p','empty-state','No matching publications. Try another topic or search term.')); return; }
+      filtered.forEach(d=>{
+        const article=elt('article','library-item');
+        article.append(elt('p','meta',d.kind+' · '+d.publisher),elt('h2','',d.title));
+        const tags=elt('div','tag-list');
+        d.topics.forEach(id=>{
+          const b=elt('button','tag',topicName(id)); b.type='button';
+          b.addEventListener('click',()=>{ selectedTopic=id; $('#topic-filter').value=id; renderLibrary(); });
+          tags.appendChild(b);
+        });
+        article.append(tags,makeSourceLink(d)); list.appendChild(article);
+      });
+    }
+    function go(page='home',topic='all',updateHash=true) {
+      if(!['home','library','about'].includes(page)) page='home';
+      if(page==='library') {
+        selectedTopic=TOPICS.some(t=>t.id===topic)?topic:'all';
+        $('#topic-filter').value=selectedTopic; renderLibrary();
+      }
+      ['home','library','about'].forEach(p=>$('#page-'+p).hidden=p!==page);
+      document.querySelectorAll('[data-nav]').forEach(b=>{
+        if(b.dataset.nav===page) b.setAttribute('aria-current','page');
+        else b.removeAttribute('aria-current');
+      });
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel(); speaking=false;
+      if(updateHash){ const target=page==='library'?'#library/'+selectedTopic:'#'+page; if(location.hash!==target) history.replaceState(null,'',target); }
+      window.scrollTo({top:0,behavior:'auto'});
+    }
+    function routeFromHash() {
+      const path=decodeURIComponent(location.hash.slice(1));
+      const [page,topic]=path.split('/');
+      go(['home','library','about'].includes(page)?page:'home',topic||'all',false);
+    }
+    function safeHttpsUrl(url) {
+      try { const u=new URL(url); return u.protocol==='https:' ? u.href : null; } catch {return null;}
+    }
+    function validateAnswer(payload) {
+      if(!payload || !Array.isArray(payload.claims) || !payload.claims.length || !Array.isArray(payload.sources)) return null;
+      const validSources = payload.sources.filter(s=>
+        s && typeof s.id==='string' && typeof s.title==='string' && typeof s.quote==='string' &&
+        s.quote.trim() && safeHttpsUrl(s.url)
+      );
+      const lookup=new Map(validSources.map(s=>[s.id,s]));
+      if(!payload.claims.every(c => c && typeof c.text==='string' && c.text.trim() && Array.isArray(c.sourceIds) && c.sourceIds.length && c.sourceIds.every(id=>lookup.has(id)))) return null;
+      return {claims:payload.claims,sources:validSources};
+    }
+    function matchSources(question) {
+      const common=new Set(['what','where','when','why','how','does','should','could','would','about','there','with','from','have','need','must','nursery','child','children','staff','are','for','the','and','to','can','is','do','if','a','an','i','we','of','in']);
+      const terms=[...new Set(question.toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(t=>t.length>2&&!common.has(t)))];
+      if(!terms.length) return [];
+      return SOURCES.map(src=>{
+        const title=src.title.toLowerCase(), keywords=src.keywords.toLowerCase(), all=(src.title+' '+src.publisher+' '+src.kind+' '+src.keywords).toLowerCase();
+        const score=terms.reduce((n,t)=>n+(title.includes(t)?3:keywords.includes(t)?2:all.includes(t)?1:0),0);
+        return {src,score};
+      }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,5).map(x=>x.src);
+    }
+    function resultIntro(question,status) {
+      const box=$('#answer-section'); box.hidden=false; box.replaceChildren();
+      box.appendChild(elt('h2','',status==='loading'?'Searching guidance…':'Your search'));
+      const q=elt('p','',question); q.style.fontWeight='700'; box.appendChild(q);
+      return box;
+    }
+    function renderUnconnected(question) {
+      const box=resultIntro(question,'unavailable');
+      const msg=elt('div','notice');
+      msg.append(elt('h3','','Referenced AI answers are not connected yet.'),elt('p','','This prototype can find related publication links, but it cannot search inside the documents or verify guidance answers until the approved database and secure search function are connected.'));
+      box.appendChild(msg);
+      const matched=matchSources(question);
+      if(matched.length){
+        box.appendChild(elt('h3','','Related official publications'));
+        box.appendChild(elt('p','help-text','Matched using titles and topic keywords only — not full document text.'));
+        const grid=elt('div','source-grid');
+        matched.forEach(d=>{
+          const item=elt('article','source-card');
+          item.append(elt('h3','',d.title),elt('p','meta',d.publisher),makeSourceLink(d));grid.appendChild(item);
+        });box.appendChild(grid);
+      } else {
+        box.appendChild(elt('p','','No closely matching publication titles or keywords were found. Try the document library.'));
+      }
+      const b=elt('button','secondary','Browse all documents '); b.type='button'; b.appendChild(icon('arrow',17)); b.style.marginTop='17px';
+      b.addEventListener('click',()=>go('library')); box.appendChild(b);
+      box.scrollIntoView({block:'start',behavior:'auto'});
+    }
+    function renderInsufficient(question) {
+      const box=resultIntro(question,'insufficient');
+      box.append(elt('h3','','Not enough verified evidence to answer safely.'),elt('p','','Try rephrasing your question or open the original guidance. Sprout should never guess when approved sources are missing.'));
+      const b=elt('button','secondary','Browse official sources'); b.type='button'; b.addEventListener('click',()=>go('library'));box.appendChild(b);
+      box.scrollIntoView({block:'start',behavior:'auto'});
+    }
+    function readAloud(claims, button) {
+      if(!('speechSynthesis' in window))return;
+      if(speaking){window.speechSynthesis.cancel();speaking=false;button.replaceChildren(icon('speaker',19),document.createTextNode(' Read aloud'));return;}
+      const u=new SpeechSynthesisUtterance(claims.map(c=>c.text).join('. '));u.lang='en-GB';u.rate=.9;
+      u.onend=u.onerror=()=>{speaking=false;button.replaceChildren(icon('speaker',19),document.createTextNode(' Read aloud'));};
+      speaking=true;button.replaceChildren(icon('stop',19),document.createTextNode(' Stop reading'));
+      window.speechSynthesis.cancel();window.speechSynthesis.speak(u);
+    }
+    function renderVerified(question,answer) {
+      const box=resultIntro(question,'ready');
+      const header=elt('div','section-head');header.style.marginTop='18px';
+      header.appendChild(elt('h2','','Answer from approved guidance'));
+      if('speechSynthesis' in window) {
+        const b=elt('button','secondary','Read aloud');b.type='button';b.prepend(icon('speaker',19));
+        b.addEventListener('click',()=>readAloud(answer.claims,b));header.appendChild(b);
+      }
+      box.appendChild(header);
+      const claims=elt('ol','claim-list');
+      answer.claims.forEach(c=>{
+        const li=elt('li');li.appendChild(elt('p','',c.text));
+        c.sourceIds.forEach(id=>{
+          const src=answer.sources.find(s=>s.id===id);
+          const a=elt('a','source-chip','Source: '+src.title);a.href='#evidence-'+id;li.appendChild(a);
+        });claims.appendChild(li);
+      });box.appendChild(claims);
+      box.appendChild(elt('h2','','Official wording and sources'));
+      const grid=elt('div','source-grid');
+      answer.sources.forEach(src=>{
+        const item=elt('article','source-card');item.id='evidence-'+src.id;
+        item.append(elt('h3','',src.title),elt('p','meta',[src.section,src.version].filter(Boolean).join(' · ')),elt('blockquote','',src.quote));
+        const link=elt('a','external','Open official source ');link.href=safeHttpsUrl(src.url);link.target='_blank';link.rel='noopener noreferrer';link.appendChild(icon('external',17));
+        item.appendChild(link);grid.appendChild(item);
+      });box.appendChild(grid);
+      box.scrollIntoView({block:'start',behavior:'auto'});
+    }
+    async function runSearch(rawQuestion) {
+      const question=rawQuestion.trim();if(!question)return;
+      $('#question-input').value=question;
+      if($('#page-home').hidden)go('home');
+      currentQuestion=question;
+      const id=++activeRequest;
+      if(!SEARCH_ENDPOINT) {renderUnconnected(question);return;}
+      resultIntro(question,'loading');
+      try {
+        const headers={'Content-Type':'application/json'};
+        if(PUBLIC_SUPABASE_ANON_KEY) {headers.apikey=PUBLIC_SUPABASE_ANON_KEY;headers.Authorization='Bearer '+PUBLIC_SUPABASE_ANON_KEY;}
+        const response=await fetch(SEARCH_ENDPOINT,{method:'POST',headers,body:JSON.stringify({question})});
+        if(id!==activeRequest)return;
+        if(response.status===404||response.status===501){renderUnconnected(question);return;}
+        if(!response.ok)throw new Error('Search not available');
+        const payload=await response.json();
+        if(payload?.status==='insufficient_evidence'){renderInsufficient(question);return;}
+        const validated=validateAnswer(payload);
+        if(!validated) {renderInsufficient(question);return;}
+        renderVerified(question,validated);
+      }catch{ if(id===activeRequest)renderUnconnected(question); }
+    }
+    function setFont(n) {
+      fontSize=Math.max(16,Math.min(22,n));
+      document.documentElement.style.setProperty('--font-px',fontSize+'px');
+      $('#size-name').textContent=fontSize===16?'Small':fontSize===18?'Normal':fontSize===20?'Large':'Extra large';
+      $('#font-smaller').disabled=fontSize<=16;$('#font-bigger').disabled=fontSize>=22;
+      try{localStorage.setItem('sprout-font-size',String(fontSize));}catch{}
+    }
+    function setSpacing(value){extraSpacing=value;document.body.classList.toggle('easy-read',value);$('#line-spacing').checked=value;try{localStorage.setItem('sprout-extra-spacing',String(value));}catch{}}
+    function init() {
+      renderIcons();renderTopics();renderExamples();
+      const select=$('#topic-filter');select.appendChild(new Option('All topics','all'));
+      TOPICS.forEach(t=>select.appendChild(new Option(t.title,t.id)));
+      select.addEventListener('change',()=>{selectedTopic=select.value;renderLibrary();});
+      $('#library-search').addEventListener('input',renderLibrary);
+      document.querySelectorAll('[data-nav]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.nav)));
+      $('#all-documents').addEventListener('click',()=>go('library'));
+      $('#explore-learning').addEventListener('click',()=>go('library','learning'));
+      $('#about-back').addEventListener('click',()=>go('home'));
+      $('#question-form').addEventListener('submit',e=>{e.preventDefault();runSearch($('#question-input').value);});
+      $('#font-smaller').addEventListener('click',()=>setFont(fontSize-2));
+      $('#font-bigger').addEventListener('click',()=>setFont(fontSize+2));
+      $('#line-spacing').addEventListener('change',e=>setSpacing(e.target.checked));
+      try{const saved=Number(localStorage.getItem('sprout-font-size'));if([16,18,20,22].includes(saved))fontSize=saved;extraSpacing=localStorage.getItem('sprout-extra-spacing')==='true';}catch{}
+      setFont(fontSize);setSpacing(extraSpacing);
+      window.addEventListener('hashchange',routeFromHash);
+      routeFromHash();
+    }
+    document.addEventListener('DOMContentLoaded',init);
+  </script>
+</body>
+</html>
