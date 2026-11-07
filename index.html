@@ -136,6 +136,92 @@
       .search-input { padding-inline: 10px; }
     }
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    
+/* Full-screen login */
+#auth-panel:has(#auth-logged-out:not([hidden])) {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: 20px;
+  border: 0;
+  border-radius: 0;
+  background: var(--mint-pale);
+}
+
+/* Centred login card */
+#auth-logged-out {
+  width: 100%;
+  max-width: 440px;
+  padding: 40px 32px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  text-align: center;
+}
+
+#auth-logged-out h2 {
+  font-size: 1.6rem;
+  margin-bottom: 10px;
+}
+
+#auth-logged-out .form-label {
+  text-align: left;
+}
+
+/* Stack email and button */
+#auth-logged-out .search-row {
+  flex-direction: column;
+  gap: 12px;
+}
+
+#auth-logged-out .search-input {
+  width: 100%;
+}
+
+#auth-logged-out .primary {
+  width: 100%;
+}
+
+/* After login: remove the big login card */
+#auth-panel:has(#auth-logged-in:not([hidden])) {
+  width: fit-content;
+  margin: 14px 0 0 auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+/* Small account controls inside the app */
+#auth-logged-in {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+#auth-logged-in h2 {
+  display: none;
+}
+
+#auth-logged-in p {
+  margin: 0;
+  font-size: 0.82rem;
+  overflow-wrap: anywhere;
+}
+
+#auth-logged-in .secondary {
+  min-height: 38px;
+}
+
+@media (max-width: 480px) {
+  #auth-logged-out {
+    padding: 30px 22px;
+  }
+}
+
   </style>
 </head>
 <body>
