@@ -186,11 +186,26 @@
     </main>
   </div>
   <script>
+    
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
     'use strict';
     // This is a static prototype until a secured Supabase Edge Function is connected.
     // All guidance evidence must come from administrator-approved source passages.
-    const SEARCH_ENDPOINT = '';
-    const PUBLIC_SUPABASE_ANON_KEY = ''; // public key only; never a service-role or AI key
+    
+const SUPABASE_URL =
+  'https://wiraugkvyktrnozggtdr.supabase.co';
+
+const PUBLIC_SUPABASE_ANON_KEY =
+  'sb_publishable_gZIf-wLKnk6Z07-m4FvD3Q_D2tdd1ED';
+
+const SEARCH_ENDPOINT = '';
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  PUBLIC_SUPABASE_ANON_KEY
+);
+
     const ICONS = {
       search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-4.2-4.2"/>',
       book: '<path d="M12 6C9 4 6 4 3 4v15c3 0 6 0 9 2 3-2 6-2 9-2V4c-3 0-6 0-9 2Z"/><path d="M12 6v15"/>',
