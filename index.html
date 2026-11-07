@@ -222,6 +222,62 @@
   }
 }
 
+    
+/* Login logo */
+#auth-login-logo {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 22px;
+  display: grid;
+  place-items: center;
+  background: #FDECEC;
+  border-radius: 18px;
+}
+
+#auth-login-logo img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+/* Account controls at the bottom of the sidebar */
+@media (min-width: 761px) {
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar .nav {
+    flex: 1;
+  }
+
+  .sidebar #auth-panel:has(#auth-logged-in:not([hidden])) {
+    width: 100%;
+    margin: auto 0 0;
+    padding: 14px 0 0;
+    border: 0;
+    border-top: 1px solid var(--border);
+    border-radius: 0;
+    background: transparent;
+  }
+}
+
+.sidebar #auth-logged-in {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.sidebar #auth-logged-in p {
+  font-size: 0.78rem;
+}
+
+.sidebar #auth-logged-in .secondary {
+  width: 100%;
+  justify-content: flex-start;
+}
+
+
   </style>
 </head>
 <body>
@@ -263,8 +319,11 @@
         
 <section id="auth-panel" class="status-card">
   <div id="auth-logged-out">
-    <h2>Welcome to Early Years Desk 🐞</h2>
-    <p>Enter your email to sign up or sign in.</p>
+    
+<div id="auth-login-logo" aria-hidden="true"></div>
+<h2>Early Years Desk</h2>
+<p>Your early years guidance, all in one place.</p>
+
 
     <form id="login-form" class="search-form">
       <label class="form-label" for="login-email">
@@ -622,6 +681,21 @@ const supabaseClient = window.supabase.createClient(
     }
         
 function setupAuth() {
+  
+  // Keep account controls at the bottom of the sidebar.
+  document.querySelector('.sidebar')
+    .appendChild(document.getElementById('auth-panel'));
+  
+  // Reuse the existing Early Years Desk ladybug logo.
+  const brandLogo =
+    document.querySelector('.brand-mark img');
+
+  if (brandLogo) {
+    document.getElementById('auth-login-logo')
+      .replaceChildren(brandLogo.cloneNode(true));
+  }
+
+
   const loginForm = $('#login-form');
   const loginMessage = $('#login-message');
   const loginButton = loginForm.querySelector('button');
