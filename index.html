@@ -178,7 +178,7 @@
 <section id="auth-panel" class="status-card">
   <div id="auth-logged-out">
     <h2>Welcome to Early Years Desk 🐞</h2>
-    <p>Sign in with your invited email address.</p>
+    <p>Enter your email to sign up or sign in.</p>
 
     <form id="login-form" class="search-form">
       <label class="form-label" for="login-email">
@@ -588,7 +588,7 @@ function setupAuth() {
         options: {
           emailRedirectTo:
             'https://zcuaan.github.io/baobao/',
-          shouldCreateUser: false
+          shouldCreateUser: true
         }
       });
 
