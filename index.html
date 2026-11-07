@@ -279,6 +279,41 @@
 }
 
 
+/* Animated search indicator */
+.search-loading {
+  display: grid;
+  gap: 12px;
+}
+
+.search-loading-track {
+  height: 6px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: #E2F0ED;
+}
+
+.search-loading-track::before {
+  content: "";
+  display: block;
+  width: 35%;
+  height: 100%;
+  border-radius: inherit;
+  background: #3FBBC4;
+  animation: search-moving 1.5s ease-in-out infinite;
+}
+
+@keyframes search-moving {
+  from { transform: translateX(-110%); }
+  to { transform: translateX(290%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .search-loading-track::before {
+    animation: none;
+    width: 100%;
+  }
+}
+
   </style>
 </head>
 <body>
@@ -708,11 +743,22 @@ async function runSearch(rawQuestion) {
   $('#question-input').value = question;
 
   const requestId = ++activeRequest;
-  const box = beginResult(question);
+  
+const box = beginResult(question);
 
-  box.appendChild(
-    elt('p', 'muted', 'Searching official guidance…')
-  );
+const loading = elt('div', 'search-loading');
+loading.setAttribute('role', 'status');
+
+loading.appendChild(
+  elt('p', 'muted', 'Finding your answer…')
+);
+
+loading.appendChild(
+  elt('div', 'search-loading-track')
+);
+
+box.appendChild(loading);
+
 
   try {
     // Get the current signed-in user's access token.
