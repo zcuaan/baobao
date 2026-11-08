@@ -679,53 +679,135 @@ function validateAnswer(payload) {
       button.replaceChildren(icon('stop', 18), document.createTextNode(' Stop reading'));
       window.speechSynthesis.cancel(); window.speechSynthesis.speak(voice);
     }
-    function renderAnswer(question, answer) {
-      const box = beginResult(question);
-      const heading = elt('h2', '', 'Answer from source documents');
-      box.appendChild(heading);
-      if ('speechSynthesis' in window) {
-        const button = elt('button', 'secondary', ' Read aloud'); button.type = 'button';
-        button.prepend(icon('speaker', 18));
-        button.addEventListener('click', () => readAloud(answer.claims, button));
-        box.appendChild(button);
-      }
-      const claims = elt('ol', 'claim-list');
-      answer.claims.forEach(claim => {
-        const li = elt('li'); li.appendChild(elt('p', '', claim.text));
-        claim.sourceIds.forEach(id => {
-          const idx = answer.sources.findIndex(src => src.id === id);
-          const source = answer.sources[idx];
-          const link = elt('a', 'source-chip', 'Source: ' + source.title);
-          link.href = '#evidence-' + idx;
-          li.appendChild(link);
-        });
-        claims.appendChild(li);
-      });
-      box.appendChild(claims);
-      box.appendChild(elt('h2', '', 'Official wording and sources'));
-      const grid = elt('div', 'source-grid');
-      answer.sources.forEach((src, idx) => {
-        const article = elt('article', 'source-card'); article.id = 'evidence-' + idx;
-        
-article.append(
-  elt('h3', '', src.title),
-  elt(
-    'p',
-    'meta',
-    [
-      src.section,
-      src.page != null ? 'Page ' + src.page : null
-    ].filter(Boolean).join(' · ')
-  )
-);
+    
+function renderAnswer(question, answer) {
+  const box = beginResult(question);
+  box.appendChild(elt('h2', '', 'Answer'));
 
-        const link = elt('a', 'source-link', 'Open official source');
-        link.href = safeHttpsUrl(src.url); link.target = '_blank'; link.rel = 'noopener noreferrer';
-        link.appendChild(icon('external', 16)); article.appendChild(link);
-        grid.appendChild(article);
+  if ('speechSynthesis' in window) {
+    const button = elt('button', 'secondary', ' Read aloud');
+    button.type = 'button';
+    button.prepend(icon('speaker', 18));
+    button.addEventListener('click', () =>
+      readAloud(answer.claims, button)
+    );
+    box.appendChild(button);
+  }
+
+  function pageLabel(numbers) {
+    const pages = [...new Set(numbers)]
+      .filter(Number.isInteger)
+      .sort((a, b) => a - b);
+
+    if (!pages.length) return '';
+    if (pages.length === 1) return 'p.' + pages[0];
+
+    const consecutive = pages.every(
+      (p, i) => i === 0 || p === pages[i - 1] + 1
+    );
+
+    return consecutive
+      ? 'pp.' + pages[0] + '–' + pages[pages.length - 1]
+      : 'pp.' + pages.join(', ');
+  }
+
+  // Group passages that belong to the same document.
+  const groups = new Map();
+  const sourceById = new Map();
+  const groupById = new Map();
+
+  answer.sources.forEach(src => {
+    const key = String(src.document_id ?? src.url);
+
+    if (!groups.has(key)) {
+      groups.set(key, {
+        title: src.title,
+        url: src.url,
+        pages: [],
+        sections: [],
+        anchor: 'evidence-' + groups.size
       });
-      box.appendChild(grid);
     }
+
+    const group = groups.get(key);
+
+    if (src.page != null) group.pages.push(src.page);
+    if (src.section) group.sections.push(src.section);
+
+    sourceById.set(src.id, src);
+    groupById.set(src.id, group);
+  });
+
+  // Display the answer with compact citations.
+  const claims = elt('ol', 'claim-list');
+
+  answer.claims.forEach(claim => {
+    const li = elt('li');
+    li.appendChild(elt('p', '', claim.text));
+
+    const shown = new Set();
+
+    claim.sourceIds.forEach(id => {
+      const group = groupById.get(id);
+      if (!group || shown.has(group.anchor)) return;
+
+      shown.add(group.anchor);
+
+      const citedPages = claim.sourceIds
+        .filter(ref => groupById.get(ref) === group)
+        .map(ref => sourceById.get(ref)?.page);
+
+      const shortTitle = /^EYFS group/i.test(group.title)
+        ? 'EYFS'
+        : group.title;
+
+      const detail = pageLabel(citedPages);
+
+      const link = elt(
+        'a',
+        'source-chip',
+        shortTitle + (detail ? ' · ' + detail : '')
+      );
+
+      link.href = '#' + group.anchor;
+      li.appendChild(link);
+    });
+
+    claims.appendChild(li);
+  });
+
+  box.appendChild(claims);
+  box.appendChild(elt('h2', '', 'Sources'));
+
+  // One source card per document, not per passage.
+  const grid = elt('div', 'source-grid');
+
+  groups.forEach(group => {
+    const article = elt('article', 'source-card');
+    article.id = group.anchor;
+
+    article.appendChild(elt('h3', '', group.title));
+
+    const detail = pageLabel(group.pages) ||
+      [...new Set(group.sections)].join(' · ');
+
+    if (detail) {
+      article.appendChild(elt('p', 'meta', detail));
+    }
+
+    const link = elt('a', 'source-link', 'Open official source');
+    link.href = safeHttpsUrl(group.url);
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.appendChild(icon('external', 16));
+
+    article.appendChild(link);
+    grid.appendChild(article);
+  });
+
+  box.appendChild(grid);
+}
+
     
 async function runSearch(rawQuestion) {
   const question = rawQuestion.trim();
